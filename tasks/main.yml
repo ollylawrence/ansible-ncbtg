@@ -1,36 +1,41 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for ansible-ncbtg
 
+- name: Pre flight checks.
+  ansible.builtin.import_tasks: preflight-checks.yml
+  delegate_to: localhost
+  run_once: true
+
 - name: Setup directories for backups and git repo.
-  ansible.builtin.import_tasks: tasks/dir-setup.yml
+  ansible.builtin.import_tasks: dir-setup.yml
   delegate_to: localhost
   run_once: true
 
 - name: Pull git repository.
-  ansible.builtin.import_tasks: tasks/git-pull.yml
+  ansible.builtin.import_tasks: git-pull.yml
   delegate_to: localhost
   run_once: true
 
 - name: Backup ios devices configurations.
-  ansible.builtin.import_tasks: tasks/device-backup/ios.yml
+  ansible.builtin.import_tasks: device-backup/ios.yml
   when:
     - ansible_network_os is defined
     - ansible_network_os == 'cisco.ios.ios'
 
 - name: Backup nxos devices configurations.
-  ansible.builtin.import_tasks: tasks/device-backup/nxos.yml
+  ansible.builtin.import_tasks: device-backup/nxos.yml
   when:
     - ansible_network_os is defined
     - ansible_network_os == 'cisco.nxos.nxos'
 
 - name: Backup vyos devices configurations.
-  ansible.builtin.import_tasks: tasks/device-backup/vyos.yml
+  ansible.builtin.import_tasks: device-backup/vyos.yml
   when:
     - ansible_network_os is defined
     - ansible_network_os == 'vyos.vyos.vyos'
 
 - name: Save backups to git repository.
-  ansible.builtin.import_tasks: tasks/git-save-backups.yml
+  ansible.builtin.import_tasks: copy-backups-to-repo.yml
   delegate_to: localhost
   run_once: true

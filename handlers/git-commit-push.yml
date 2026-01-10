@@ -1,0 +1,74 @@
+---
+
+- name: Configure Git user.
+  ansible.builtin.shell:
+    cmd: |
+      git config user.email "{{ git_user_email }}"
+      git config user.name "{{ git_user_name }}"
+  args:
+    chdir: "{{ git_repo_dir }}"
+    creates: "{{ git_repo_dir }}/.git/config" # Prevent re-running if config exists
+  delegate_to: localhost
+  run_once: true
+
+- name: Git status before committing.
+  ansible.builtin.command:
+    cmd: "git status"
+  args:
+    chdir: "{{ git_repo_dir }}"
+  register: git_status_before
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Show git status before committing
+  ansible.builtin.debug:
+    var: git_status_before.stdout
+  delegate_to: localhost
+  run_once: true
+
+- name: Stage all changes.
+  ansible.builtin.command:
+    cmd: "git add ."
+  args:
+    chdir: "{{ git_repo_dir }}"
+  register: git_add_result
+  changed_when: git_add_result.rc != 0 or 'new file' in git_add_result.stdout or 'changes' in git_add_result.stdout
+  delegate_to: localhost
+  run_once: true
+
+- name: Commit staged changes
+  ansible.builtin.shell:
+    cmd: |
+      git commit -m {{ git_commit_message | quote }}
+  args:
+    chdir: "{{ git_repo_dir }}"
+  register: git_commit_result
+  # Only consider it a 'change' if a commit actually happened (not "nothing to commit")
+  changed_when: "'nothing to commit' not in git_commit_result.stdout"
+  delegate_to: localhost
+  run_once: true
+
+- name: Git status after committing.
+  ansible.builtin.command:
+    cmd: "git status"
+  args:
+    chdir: "{{ git_repo_dir }}"
+  register: git_status_after
+  changed_when: false
+  delegate_to: localhost
+  run_once: true
+
+- name: Show git status after committing
+  ansible.builtin.debug:
+    var: git_status_after.stdout
+  delegate_to: localhost
+  run_once: true
+
+- name: Push committed changes to remote origin
+  ansible.builtin.command:
+    cmd: "git push origin {{ git_branch }}"
+  args:
+    chdir: "{{ git_repo_dir }}"
+  delegate_to: localhost
+  run_once: true

@@ -1,0 +1,8 @@
+---
+
+- name: Backup NXOS configuration.
+  cisco.nxos.nxos_config:
+    backup: true
+    backup_options:
+      filename: "{{ inventory_hostname }}.nxos"
+      dir_path: "{{ tmp_backup_dir }}"

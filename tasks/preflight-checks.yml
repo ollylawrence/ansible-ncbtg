@@ -1,0 +1,23 @@
+---
+
+- name: Check if git is installed.
+  ansible.builtin.command: git --version
+  register: git_check
+  ignore_errors: true
+
+- name: Fail if git is not installed.
+  ansible.builtin.fail:
+    msg: "Git is not installed on the control node. Please install git to proceed."
+  when: git_check.rc != 0
+
+- name: Check if variables are defined.
+  ansible.builtin.assert:
+    that:
+      - tmp_backup_dir is defined or tmp_backup_dir != ''
+      - git_repo_url is defined or git_repo_url != ''
+      - git_repo_dir is defined or git_repo_dir != ''
+      - git_branch is defined or git_branch != ''
+      - git_commit_message is defined or git_commit_message != ''
+      - git_user_name is defined or git_user_name != ''
+      - git_user_email is defined or git_user_email != ''
+    fail_msg: "One or more required variables are not defined. Please see documentation for required variables."

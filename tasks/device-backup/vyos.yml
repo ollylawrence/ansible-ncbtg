@@ -1,0 +1,8 @@
+---
+
+- name: Backup VyOS configuration.
+  vyos.vyos.vyos_config:
+    backup: true
+    backup_options:
+      filename: "{{ inventory_hostname }}.vyos"
+      dir_path: "{{ tmp_backup_dir }}"

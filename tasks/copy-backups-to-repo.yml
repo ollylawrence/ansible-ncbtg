@@ -1,0 +1,8 @@
+---
+
+- name: Copy backup files to git repository.
+  ansible.builtin.copy:
+    src: "{{ tmp_backup_dir }}/"
+    dest: "{{ git_repo_dir }}/"
+    mode: '0644'
+  notify: "Commit and push"
