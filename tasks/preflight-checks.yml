@@ -4,6 +4,7 @@
   ansible.builtin.command: git --version
   register: git_check
   ignore_errors: true
+  changed_when: false
 
 - name: Fail if git is not installed.
   ansible.builtin.fail:
@@ -21,3 +22,4 @@
       - git_user_name is defined or git_user_name != ''
       - git_user_email is defined or git_user_email != ''
     fail_msg: "One or more required variables are not defined. Please see documentation for required variables."
+    success_msg: "All variables present we can proceed."
