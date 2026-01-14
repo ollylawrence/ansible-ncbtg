@@ -7,7 +7,6 @@
       git config user.name "{{ git_user_name }}"
   args:
     chdir: "{{ git_repo_dir }}"
-    # creates: "{{ git_repo_dir }}/.git/config" # Prevent re-running if config exists
   delegate_to: localhost
   run_once: true
   changed_when: false
