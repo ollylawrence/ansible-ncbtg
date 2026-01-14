@@ -32,5 +32,5 @@ galaxy_info:
     - nxos
     - configurations
 
-dependencies:
+dependencies: []
   # - { role: another_role, some_variable: some_value }
