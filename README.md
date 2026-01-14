@@ -90,6 +90,7 @@ Example Playbook
 
 Just call the role and at least the following variables.
 
+```
 - name: Network Backup Playbook.
   hosts: ios
   gather_facts: false
@@ -98,6 +99,7 @@ Just call the role and at least the following variables.
       vars:
         git_repo_url: 'git@gitserver:project/network-config-archive.git'
         git_user_email: 'user@domain'
+```
 
 License
 -------
