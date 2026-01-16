@@ -6,3 +6,16 @@
     backup_options:
       filename: "{{ inventory_hostname }}.nxos"
       dir_path: "{{ tmp_backup_dir }}"
+
+- name: Find all NXOS backup files.
+  ansible.builtin.find:
+    paths: "{{ tmp_backup_dir }}/*.nxos"
+    patterns: '*.nxos'
+  register: found_nxos_files
+
+- name: Remove timestamp from NXOS backup files.
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    regexp: '^!Time.*\n'
+    state: absent
+  loop: "{{ found_nxos_files.files }}"
