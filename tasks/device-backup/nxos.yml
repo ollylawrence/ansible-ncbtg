@@ -9,7 +9,7 @@
 
 - name: Find all NXOS backup files.
   ansible.builtin.find:
-    paths: "{{ tmp_backup_dir }}/*.nxos"
+    paths: "{{ tmp_backup_dir }}"
     patterns: '*.nxos'
   register: found_nxos_files
   delegate_to: localhost
