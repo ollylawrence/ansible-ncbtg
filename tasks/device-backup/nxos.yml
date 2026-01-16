@@ -12,6 +12,8 @@
     paths: "{{ tmp_backup_dir }}/*.nxos"
     patterns: '*.nxos'
   register: found_nxos_files
+  delegate_to: localhost
+  run_once: true
 
 - name: Remove timestamp from NXOS backup files.
   ansible.builtin.lineinfile:
@@ -19,3 +21,5 @@
     regexp: '^!Time.*\n'
     state: absent
   loop: "{{ found_nxos_files.files }}"
+  delegate_to: localhost
+  run_once: true
